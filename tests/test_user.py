@@ -28,6 +28,11 @@ def test_send_friend_request_invalid(user):
     assert user.pending_friends == []
 
 
+def test_send_friend_request_self(user):
+    user.send_friend_request(user)
+    assert user.pending_friends == []
+
+
 def test_send_friend_request_pending_exists(user, friend):
     user.send_friend_request(friend)
     friend.send_friend_request(user)
@@ -52,6 +57,18 @@ def test_accept_pending_request(user, friend):
     assert friend.pending_friends == []
     assert user.friends == [friend]
     assert friend.friends == [user]
+
+
+def test_accept_pending_request_on_behalf_of_friend(user, friend):
+    user.send_friend_request(friend)
+    assert user.pending_friends == [friend]
+    assert friend.pending_friends == [user]
+
+    user.accept_pending_request(user)
+    assert user.pending_friends == [friend]
+    assert friend.pending_friends == [user]
+    assert user.friends == []
+    assert friend.friends == []
 
 
 def test_accept_pending_request_multiple(user, friend, friend2):

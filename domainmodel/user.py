@@ -94,7 +94,7 @@ class User:
             self.__reviews.append(review)
 
     def send_friend_request(self, recipient):
-        if type(recipient) is User:
+        if type(recipient) is User and self != recipient:
             # check to see if they are not already (pending) friends
             if (recipient not in self.__pending_friends) and (recipient not in self.__friends):
                 # add both users to each other's pending lists
@@ -102,7 +102,7 @@ class User:
                 recipient.__pending_friends.append(self)
 
     def accept_pending_request(self, sender):
-        if type(sender) is User:
+        if type(sender) is User and self != sender:
             if sender in self.__pending_friends:
                 # add both users to each other's friends lists
                 self.__friends.append(sender)
